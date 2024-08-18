@@ -2,4 +2,4 @@
 This is https://penguin.photos/ source.
 
 ## License
-MIT License.d
+MIT License.
