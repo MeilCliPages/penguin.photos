@@ -1,0 +1,26 @@
+---
+import { Image as AstroImage } from "astro:assets";
+
+interface Props {
+    src: string;
+    alt: string | null;
+}
+
+const size = 256;
+const { src, alt } = Astro.props;
+const image540WebpUrl = src.replace(/original\..+$/, "image-540.webp");
+const image540jpgUrl = src.replace(/original\..+$/, "image-540.jpg");
+---
+
+<div class="text-center">
+    <picture>
+        <source type="image/webp" srcset={image540WebpUrl} />
+        <AstroImage
+            src={image540jpgUrl}
+            width={size}
+            height={size}
+            alt={alt}
+            class="h-[200px] w-[200px] object-cover md:h-[192px] md:w-[192px] lg:h-[256px] lg:w-[256px]"
+        />
+    </picture>
+</div>

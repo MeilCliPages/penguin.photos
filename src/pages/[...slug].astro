@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Tag from "../components/Tag.astro";
+import Image from "../components/mdx/Image.astro";
+import { getDate } from "../content/feed";
+
+export async function getStaticPaths() {
+    const feeds = await getCollection("feed");
+    return feeds
+        .flatMap((x) =>
+            x.data.images.map((y, i) => {
+                return { tag: x.data.tag, date: getDate(x), image: y, imageIndex: i };
+            }),
+        )
+        .map((data) => {
+            return {
+                params: {
+                    slug: `${data.date.getFullYear()}/${data.date.getMonth() + 1}/${data.date.getDay()}/${data.imageIndex}`,
+                },
+                props: data,
+            };
+        });
+}
+export interface Props {
+    tag: string;
+    image: string;
+}
+
+const { tag, image } = Astro.props;
+---
+
+<Layout title={tag} description="">
+    <article class="my-8">
+        <div>
+            <Tag name={tag} />
+            <hr />
+        </div>
+        <Image src={image} alt="Penguin" />
+    </article>
+</Layout>

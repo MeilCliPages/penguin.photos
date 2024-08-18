@@ -1,0 +1,25 @@
+---
+interface Props {
+    date: Date;
+}
+
+const { date } = Astro.props;
+---
+
+<time is="time-text" datetime={date.toISOString()}></time>
+
+<script>
+    class TimeText extends HTMLTimeElement {
+        constructor() {
+            super();
+
+            this.innerText = new Date(this.dateTime).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+        }
+    }
+
+    customElements.define("time-text", TimeText, { extends: "time" });
+</script>

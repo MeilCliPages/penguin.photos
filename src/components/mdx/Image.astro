@@ -1,0 +1,38 @@
+---
+import { Image as AstroImage } from "astro:assets";
+import { ImageCache } from "../../image-cache";
+
+interface Props {
+    src: string;
+    alt: string | null;
+}
+
+const { src, alt } = Astro.props;
+const image1080WebpUrl = src.replace(/original\..+$/, "image-1080.webp");
+const image1080jpgUrl = src.replace(/original\..+$/, "image-1080.jpg");
+const image540WebpUrl = src.replace(/original\..+$/, "image-540.webp");
+const image540jpgUrl = src.replace(/original\..+$/, "image-540.jpg");
+
+const cache = new ImageCache();
+const response = await cache.get(image1080WebpUrl);
+
+if (response == undefined || response == null) {
+    throw new Error(`Failed to fetch image: ${image1080WebpUrl}`);
+}
+
+let shownWidth = response.width;
+let shownHeight = response.height;
+if (800 < shownHeight) {
+    shownWidth = Math.round((response.width * 800) / response.height);
+    shownHeight = 800;
+}
+---
+
+<div class="text-center">
+    <picture class="inline-block">
+        <source type="image/webp" srcset={image540WebpUrl} media="(max-width: 540px)" />
+        <source type="image/jpeg" srcset={image540jpgUrl} media="(max-width: 540px)" />
+        <source type="image/webp" srcset={image1080WebpUrl} />
+        <AstroImage src={image1080jpgUrl} width={shownWidth} height={shownHeight} alt={alt} />
+    </picture>
+</div>

@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { escapeTag } from "../../content/tag";
+import { siteTitle } from "../../constant";
+
+const feeds = await getCollection("feed");
+const uniqueTags = [...new Set(feeds.map((feed) => feed.data.tag))];
+const tagCount = uniqueTags
+    .map((tag) => {
+        return {
+            tag: tag,
+            count: feeds
+                .filter((feed) => feed.data.tag == tag)
+                .map((x) => x.data.images.length)
+                .reduce((x, y) => x + y, 0),
+        };
+    })
+    .sort((x, y) => y.count - x.count);
+---
+
+<Layout title={siteTitle} description="タグ一覧ページです">
+    <div class="py-4">
+        <h1>Tag</h1>
+        <div class="mt-2 flex flex-wrap gap-2">
+            {
+                tagCount.map((tag) => (
+                    <div class="py-2">
+                        <a
+                            href={`/tag/${encodeURIComponent(escapeTag(tag.tag))}/1`}
+                            class="rounded border border-solid border-cyan-500 px-4 py-2 hover:bg-slate-50/70 hover:no-underline dark:hover:bg-slate-800/70"
+                        >
+                            {tag.tag} ({tag.count})
+                        </a>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</Layout>

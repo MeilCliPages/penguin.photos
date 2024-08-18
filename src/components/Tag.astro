@@ -1,0 +1,16 @@
+---
+import { escapeTag } from "../content/tag";
+
+interface Props {
+    name: string;
+}
+
+const { name } = Astro.props;
+const tag = encodeURIComponent(escapeTag(name));
+---
+
+<a
+    href={`/tag/${tag}/1`}
+    class="mx-1 rounded border border-solid border-cyan-500 px-2 py-1 hover:bg-slate-50/70 hover:no-underline dark:hover:bg-slate-800/70"
+    >{name}</a
+>

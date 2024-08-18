@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Thumbnail from "../components/mdx/Thumbnail.astro";
+import Pagination from "../components/Pagination.astro";
+import { getCollection } from "astro:content";
+import { getDate } from "../content/feed";
+import { siteTitle, siteDescription, pagingCount } from "../constant";
+
+const feedItems = (await getCollection("feed"))
+    .flatMap((x) =>
+        x.data.images.map((y, i) => {
+            return { tag: x.data.tag, date: getDate(x), image: y, imageIndex: i };
+        }),
+    )
+    .sort((x, y) => y.date.getTime() - x.date.getTime())
+    .slice(0, pagingCount);
+---
+
+<Layout title={siteTitle} description={siteDescription}>
+    <div class="flex flex-wrap justify-center py-4">
+        {
+            feedItems.map((x) => (
+                <a href={`/${x.date.getFullYear()}/${x.date.getMonth() + 1}/${x.date.getDay()}/${x.imageIndex}`}>
+                    <Thumbnail src={x.image} alt="Penguin" />
+                </a>
+            ))
+        }
+    </div>
+    <Pagination previousUrl={undefined} nextUrl="/feed/2" />
+</Layout>

@@ -1,0 +1,45 @@
+---
+interface Props {
+    previousUrl: string | undefined;
+    nextUrl: string | undefined;
+}
+
+const { previousUrl, nextUrl } = Astro.props;
+---
+
+<style lang="scss">
+    @import "../../node_modules/@primer/css/pagination/index.scss";
+</style>
+
+<nav class="paginate-container" aria-label="Pagination">
+    <div class="pagination">
+        {
+            previousUrl != undefined && (
+                <a class="previous_page" rel="previous" href={previousUrl} aria-label="Previous Page">
+                    Previous
+                </a>
+            )
+        }
+        {
+            previousUrl == undefined && (
+                <span class="previous_page" aria-disabled="true">
+                    Previous
+                </span>
+            )
+        }
+        {
+            nextUrl != undefined && (
+                <a class="next_page" rel="next" href={nextUrl} aria-label="Next Page">
+                    Next
+                </a>
+            )
+        }
+        {
+            nextUrl == undefined && (
+                <span class="next_page" aria-disabled="true">
+                    Next
+                </span>
+            )
+        }
+    </div>
+</nav>
